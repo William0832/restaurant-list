@@ -7,6 +7,7 @@ const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const restaurantList = require('./file/restaurant.json').results
+const Restaurant = require('./models/restaurant.js')
 
 // Set express module
 const app = express()
@@ -31,18 +32,27 @@ db.once('open', () => {
 
 // === Routes ===
 app.get('/', (req, res) => {
+  // TODO: 2/26: until here: test user model to select data from db
+  Restaurant.find()
+    .lean()
+    .exec((err, restaurants) => {
+      if (err) return console.log(err)
+      console.log(restaurants)
+    })
+
   res.render('index', { restaurant: restaurantList })
 })
+
 app.get('/restaurants/:restaurant_id', (req, res) => {
   const restaurant = restaurantList.find((restaurant) => restaurant.id.toString() === req.params.restaurant_id)
   res.render('show', { restaurant })
 })
+
 app.get('/search', (req, res) => {
   const keyword = req.query.keyword
   const restaurant = restaurantList.filter((restaurant) => restaurant.name.toLowerCase().includes(keyword.toLowerCase()))
   res.render('index', { restaurant, keyword })
 })
-
 
 // Start server and listen it's port
 app.listen(port, () => {
