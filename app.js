@@ -31,6 +31,7 @@ db.once('open', () => {
 })
 
 // === Routes ===
+// 使用者可以瀏覽全部所有餐廳
 app.get('/', (req, res) => {
   // TODO: 2/26: until here: test user model to select data from db
   Restaurant.find()
@@ -43,11 +44,34 @@ app.get('/', (req, res) => {
   res.render('index', { restaurant: restaurantList })
 })
 
+// 使用者可以新增一家餐廳
+app.get('/restaurants/new', (req, res) => {
+  res.send('顯示新增餐廳頁面')
+})
+app.post('/restaurants', (req, res) => {
+  res.send('新增一家餐廳')
+})
+
+// 使用者可以瀏覽一家餐廳的詳細資訊
 app.get('/restaurants/:restaurant_id', (req, res) => {
   const restaurant = restaurantList.find((restaurant) => restaurant.id.toString() === req.params.restaurant_id)
   res.render('show', { restaurant })
 })
 
+// 使用者可以修改一家餐廳的資訊
+app.get('/restaurants/:restaurant_id/edit', (req, res) => {
+  res.send('顯示修改餐廳頁面')
+})
+app.post('/restaurants/:restaurant_id/edit', (req, res) => {
+  res.send('修改一家餐廳的資訊')
+})
+
+// 使用者可以刪除一家餐廳
+app.post('/restaurants/:restaurant_id/delete', (req, res) => {
+  res.send('刪除一家餐廳')
+})
+
+// 使用者可以搜尋餐廳
 app.get('/search', (req, res) => {
   const keyword = req.query.keyword
   const restaurant = restaurantList.filter((restaurant) => restaurant.name.toLowerCase().includes(keyword.toLowerCase()))
