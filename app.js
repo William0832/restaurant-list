@@ -21,7 +21,6 @@ app.use(methodOverride('_method')) // Use method-override to make RESTful routes
 
 // Use Router to deal with routes
 app.use('/', require('./routes/home.js'))
-app.use('/search', require('./routes/search.js'))
 app.use('/restaurants', require('./routes/restaurant.js'))
 
 // DB
