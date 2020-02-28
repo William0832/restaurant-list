@@ -33,12 +33,12 @@ npm install
 ```
 
 ## Executing
-請在 mongodb 底下新增 restaurant 資料庫
+請在 mongodb 底下新增 restaurant 資料庫   
 進到存放 mongodb 指令的 bin 資料夾，啟動 mongodb
 
-下方範例的 mongodb 資料夾為根目錄底下的 mongodb/，存放資料庫紀錄的資料夾為根目錄底下的 mongodb-data/
+下方範例的 mongodb 資料夾為根目錄底下的 mongodb/，存放資料庫紀錄的資料夾為根目錄底下的 mongodb-data/   
 (opt) localhost 的 ip 為 127.0.0.1，此行不加也可以，只是會有 WARNING 提醒
-```
+```console
 cd ~/mongodb/bin
 ./mongod --dbpath ~/mongodb-data --bind_ip 127.0.0.1
 ```
