@@ -32,11 +32,24 @@ db.once('open', () => {
 // === Routes ===
 // 使用者可以瀏覽全部所有餐廳
 app.get('/', (req, res) => {
+  const script = `
+  <script>
+  const cardContent = document.getElementById('card-content')
+  cardContent.addEventListener('click', () => {
+    if (event.target.dataset.type === "delete-btn") {
+      if (confirm('刪除後即無法復原，您確定要刪除此餐廳嗎？')) {
+        event.target.closest('.delete-restaurant-form').submit()
+      }
+    }
+  })
+  </script>
+  `
+
   Restaurant.find() // 查找資料
     .lean()         // 整理資料
     .exec((err, restaurants) => { // 抓回資料
       if (err) return console.log(err)
-      res.render('index', { restaurant: restaurants })
+      res.render('index', { restaurant: restaurants, script })
     })
 })
 
@@ -104,8 +117,6 @@ app.post('/restaurants/:restaurant_id/edit', (req, res) => {
 
 // 使用者可以刪除一家餐廳
 app.post('/restaurants/:restaurant_id/delete', (req, res) => {
-  // TODO: 提示 confirm：刪除後即無法復原
-  // ...
   Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
     if (err) return console.log(err)
     restaurant.remove((err) => {
@@ -117,11 +128,15 @@ app.post('/restaurants/:restaurant_id/delete', (req, res) => {
 
 // 使用者可以搜尋餐廳
 app.get('/search', (req, res) => {
-  // TODO: 去 DB 用 SQL LIKE 找 data
-  // ...
+  // 去 DB 用 SQL LIKE 找 data ({欄位名稱: {LIKE: %keyword%}})，ignore 大小寫
   const keyword = req.query.keyword
-  const restaurant = restaurantList.filter((restaurant) => restaurant.name.toLowerCase().includes(keyword.toLowerCase()))
-  res.render('index', { restaurant, keyword })
+  Restaurant.find({ name: { $regex: '.*' + keyword + '.*', $options: 'i' } })
+    .lean()
+    .exec((err, restaurant) => {
+      console.log(restaurant)
+      if (err) return console.log(err)
+      return res.render('index', { restaurant, keyword })
+    })
 })
 
 // Start server and listen it's port
