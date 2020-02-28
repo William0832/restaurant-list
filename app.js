@@ -6,6 +6,7 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const methodOverride = require('method-override')
 const Restaurant = require('./models/restaurant.js')
 
 // Set express module
@@ -16,6 +17,7 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' })) // define engine and
 app.set('view engine', 'handlebars') // set engine
 app.use(bodyParser.urlencoded({ extended: true })) // Tell express to use body-parser template engine
 app.use(express.static('public')) // Tell express where to find static file directory
+app.use(methodOverride('_method')) // Tell express to use method override
 
 // DB
 mongoose.connect('mongodb://127.0.0.1/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -89,10 +91,10 @@ app.get('/restaurants/:restaurant_id/edit', (req, res) => {
     .lean()
     .exec((err, restaurant) => {
       if (err) return console.log(err)
-      return res.render('edit', { restaurant })
+      return res.render('edit', { restaurant, action: `/restaurants/${restaurant._id}/?_method=PUT` })
     })
 })
-app.post('/restaurants/:restaurant_id/edit', (req, res) => {
+app.put('/restaurants/:restaurant_id', (req, res) => {
   // 檢查: 每個欄位都是必填
   const blankCount = Object.values(req.body).filter((value) => value === '').length
   if (blankCount > 0) {
@@ -116,7 +118,7 @@ app.post('/restaurants/:restaurant_id/edit', (req, res) => {
 })
 
 // 使用者可以刪除一家餐廳
-app.post('/restaurants/:restaurant_id/delete', (req, res) => {
+app.delete('/restaurants/:restaurant_id', (req, res) => {
   Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
     if (err) return console.log(err)
     restaurant.remove((err) => {
