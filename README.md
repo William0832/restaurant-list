@@ -1,46 +1,67 @@
 # Restaurant List
-每天都在煩惱要吃什麼嗎？這是個用 [Node.js](https://nodejs.org/en/)、[Express](https://expressjs.com/)、[Express-Handlebars](https://www.npmjs.com/package/express-handlebars) 打造的網站，收集了數間餐廳的資料，使用者藉由名稱搜尋、查看詳細資料，快速找到可去的餐廳。美食不等人，即刻查詢，立即出發！
+每天都在煩惱要吃什麼嗎？這是個用 [Node.js](https://nodejs.org/en/)、[Express](https://expressjs.com/)、[mongodb](https://www.mongodb.com/) 打造的網站，使用者可自行建立、編輯餐廳，更可用名稱搜尋、查看詳細資料，快速找到可去的餐廳！美食不等人，即刻查詢，立即出發！
 
 ![scrrenshot](https://github.com/JessieMosbi/restaurant-list/blob/master/features.gif?raw=true)
 
 ## Requirement
-[Node.js](https://nodejs.org/en/)
+[Node.js](https://nodejs.org/en/)   
+[mongodb](https://www.mongodb.com/)
+
+## Packages
+此專案用到以下 Node.js library，可藉由 `npm install` 指令去安裝（請參考底下 Installing 步驟）   
+[express](https://expressjs.com/)   
+[express-handlebars](https://www.npmjs.com/package/express-handlebars)   
+[body-parser](https://www.npmjs.com/package/body-parser)   
+[mongoose](https://mongoosejs.com/)
+
+***
 
 ## Installing
-透過 `gti clone` 指令將專案下載下來到本機端
+開啟終端機 (Terminal)，透過 `git clone` 指令將專案下載下來到本機端
 ```console
 git clone https://github.com/JessieMosbi/restaurant-list
 ```
 
-開啟終端機 (Terminal)，進入 restaurant-list 資料夾內，並檢查是否有 package.json 檔案
+進入 restaurant-list 資料夾內，並檢查是否有 package.json 檔案
 ```console
-cd {Your download destination}/restaurant-list
+cd restaurant-list
 ```
 
-執行 `num install`，將專案所需套件下載下來
+執行 `npm install`，將專案所需套件下載下來
 ```console
-num install
+npm install
 ```
 
-套件安裝完畢後，用專案所設定的統一指令，即可執行專案
+## Executing
+請在 mongodb 底下新增 restaurant 資料庫
+進到存放 mongodb 指令的 bin 資料夾，啟動 mongodb
+
+下方範例的 mongodb 資料夾為根目錄底下的 mongodb/，存放資料庫紀錄的資料夾為根目錄底下的 mongodb-data/
+(opt) localhost 的 ip 為 127.0.0.1，此行不加也可以，只是會有 WARNING 提醒
+```
+cd ~/mongodb/bin
+./mongod --dbpath ~/mongodb-data --bind_ip 127.0.0.1
+```
+
+進到在 Installing 步驟中， 專案所安裝的資料夾底下，用專案所設定的統一指令，即可執行專案
 ```console
+cd <Your download directory>/restaurant-list
 npm run dev
 ```
 
 預設 port 為 3000，請直接打開瀏覽器，並在 URL 輸入 http://localhost:3000/ 即可瀏覽網頁
 
-## Features
-+ 首頁查看餐廳資料（包含名稱、分類、評分）
-+ 在首頁上方的搜尋方框，輸入名稱搜尋餐廳
-+ 點選首頁的餐廳圖片，可查看更詳細的資料（
-<i class="fas fa-utensils"></i> 類別、
-<i class="fas fa-map-marker-alt"></i> 地址、
-<i class="fas fa-mobile-alt"></i> 電話、
-<i class="fas fa-star"></i> 評分），
-更可點選 <i class="fas fa-location-arrow"></i> 直接進入 Google Map 進行導航
+## Other steps
+可執行專案內的以下程式，自動在資料庫建立種子資料，以方便進行測試
+```console
+cd <Your download directory>/restaurant-list/models/seeds/
+node restaurantSeeder.js
+```
 
-<head>
-  <script defer src="https://use.fontawesome.com/releases/v5.12.1/js/all.js"></script>
-  <script defer src="https://use.fontawesome.com/releases/v5.12.1/js/v4-shims.js"></script>
-</head>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
+## Features
++ 首頁查看餐廳資料（名稱、分類、評分）
++ 在首頁上方的搜尋方框，輸入名稱搜尋餐廳
++ 點選首頁任一餐廳圖片，可查看更詳細的資料（類別、地址、電話、評分）
++ 點選首頁任一餐廳圖片底下的編輯按鈕，可進入編輯頁面，編輯該餐廳資料
++ 點選首頁任一餐廳圖片底下的刪除按鈕，可將該餐廳資料刪除
++ 點選右上方的新增按鈕，可進入新增頁面，新增一筆餐廳資料
