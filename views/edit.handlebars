@@ -2,45 +2,51 @@
   <div class="row justify-content-center">
     <div class="col-6">
       {{!-- 新增、編輯同一個頁面，action 帶入不同值即可 --}}
-      <form action="" method="POST">
+      <form action="{{action}}" method="POST">
         <div class="form-group">
           <label for="name">中文名稱</label>
-          <input type="text" class="form-control" id="name" name="name" value="">
+          <input type="text" class="form-control" id="name" name="name" value="{{restaurant.name}}">
         </div>
         <div class="form-group">
           <label for="name_en">英文名稱</label>
-          <input type="text" class="form-control" id="name_en" name="name_en" value="">
+          <input type="text" class="form-control" id="name_en" name="name_en" value="{{restaurant.name_en}}">
         </div>
         <div class="form-group">
           <label for="category">分類</label>
-          <input type="text" class="form-control" id="category" name="category" value="">
+          <input type="text" class="form-control" id="category" name="category" value="{{restaurant.category}}">
         </div>
         <div class="form-group">
           <label for="image">圖片網址</label>
-          <input type="text" class="form-control" id="image" name="image" value="">
+          <input type="text" class="form-control" id="image" name="image" value="{{restaurant.image}}">
         </div>
         <div class="form-group">
           <label for="location">地址</label>
-          <input type="text" class="form-control" id="location" name="location" value="">
+          <input type="text" class="form-control" id="location" name="location" value="{{restaurant.location}}">
         </div>
         <div class="form-group">
           <label for="phone">電話</label>
-          <input type="text" class="form-control" id="phone" name="phone" value="">
+          <input type="text" class="form-control" id="phone" name="phone" value="{{restaurant.phone}}">
         </div>
         <div class="form-group">
           <label for="google_map">Google Map</label>
-          <input type="text" class="form-control" id="google_map" name="google_map" value="">
+          <input type="text" class="form-control" id="google_map" name="google_map" value="{{restaurant.google_map}}">
         </div>
         <div class="form-group">
           <label for="rating">評分</label>
-          <input type="text" class="form-control" id="rating" name="rating" value="">
+          <input type="text" class="form-control" id="rating" name="rating" value="{{restaurant.rating}}">
         </div>
         <div class="form-group">
           <label for="description">簡介</label>
-          <input type="text" class="form-control" id="description" name="description" value="">
+          <textarea class="form-control" id="description" name="description">{{restaurant.description}}</textarea>
         </div>
         <div class="text-center">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          {{#if message}}
+            <div class="alert alert-danger mt-5" role="alert">
+              {{message}}
+            </div>
+          {{/if}}
+          <button type="submit" class="btn btn-outline-success">Submit</button>
+          <a href="/"><button type="button" class="btn btn-outline-secondary">Cancel</button></a>
         </div>
       </form>
     </div>

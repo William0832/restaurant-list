@@ -6,7 +6,6 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const restaurantList = require('./file/restaurant.json').results
 const Restaurant = require('./models/restaurant.js')
 
 // Set express module
@@ -33,47 +32,93 @@ db.once('open', () => {
 // === Routes ===
 // 使用者可以瀏覽全部所有餐廳
 app.get('/', (req, res) => {
-  // TODO: 改從 DB 撈資料
-  Restaurant.find()
-    .lean()
-    .exec((err, restaurants) => {
+  Restaurant.find() // 查找資料
+    .lean()         // 整理資料
+    .exec((err, restaurants) => { // 抓回資料
       if (err) return console.log(err)
-      console.log(restaurants)
+      res.render('index', { restaurant: restaurants })
     })
-
-  res.render('index', { restaurant: restaurantList })
 })
 
 // 使用者可以新增一家餐廳
 app.get('/restaurants/new', (req, res) => {
-  // 新增、編輯同一個頁面，action 帶入不同值即可
-  res.render('edit')
+  res.render('edit', { action: '/restaurants' })
 })
 app.post('/restaurants', (req, res) => {
-  res.send('新增一家餐廳')
+  // 檢查: 每個欄位都是必填
+  const blankCount = Object.values(req.body).filter((value) => value === '').length
+  if (blankCount > 0) {
+    const message = `尚有 ${blankCount}個欄位沒有填寫，請檢查！`
+    return res.render('edit', { restaurant: req.body, message })
+  }
+
+  const restaurant = new Restaurant(req.body)
+  // console.log(restaurant) // initialize 的當下，就會給一個 _id 了欸
+  restaurant.save((err) => {
+    if (err) return console.log(err)
+    return res.redirect('/')
+  })
 })
 
 // 使用者可以瀏覽一家餐廳的詳細資訊
 app.get('/restaurants/:restaurant_id', (req, res) => {
-  const restaurant = restaurantList.find((restaurant) => restaurant.id.toString() === req.params.restaurant_id)
-  res.render('detail', { restaurant })
+  Restaurant.findById(req.params.restaurant_id)
+    .lean()
+    .exec((err, restaurant) => {
+      if (err) return console.log(err)
+      return res.render('detail', { restaurant })
+    })
 })
 
 // 使用者可以修改一家餐廳的資訊
 app.get('/restaurants/:restaurant_id/edit', (req, res) => {
-  res.render('edit')
+  Restaurant.findById(req.params.restaurant_id)
+    .lean()
+    .exec((err, restaurant) => {
+      if (err) return console.log(err)
+      return res.render('edit', { restaurant })
+    })
 })
 app.post('/restaurants/:restaurant_id/edit', (req, res) => {
-  res.send('修改一家餐廳的資訊')
+  // 檢查: 每個欄位都是必填
+  const blankCount = Object.values(req.body).filter((value) => value === '').length
+  if (blankCount > 0) {
+    const message = `尚有 ${blankCount}個欄位沒有填寫，請檢查！`
+    return res.render('edit', { restaurant: req.body, message })
+  }
+
+  Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
+    if (err) return console.error(err)
+    // 塞值
+    Object.entries(restaurant._doc).forEach(([key, value]) => {
+      if (key === '_id') return
+      restaurant[key] = (req.body[key]) ? req.body[key] : restaurant[key]
+    })
+    // 寫入
+    restaurant.save((err) => {
+      if (err) return console.log(err)
+      return res.redirect(`/restaurants/${req.params.restaurant_id}`)
+    })
+  })
 })
 
 // 使用者可以刪除一家餐廳
 app.post('/restaurants/:restaurant_id/delete', (req, res) => {
-  res.send('刪除一家餐廳')
+  // TODO: 提示 confirm：刪除後即無法復原
+  // ...
+  Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
+    if (err) return console.log(err)
+    restaurant.remove((err) => {
+      if (err) return console.log(err)
+      return res.redirect('/')
+    })
+  })
 })
 
 // 使用者可以搜尋餐廳
 app.get('/search', (req, res) => {
+  // TODO: 去 DB 用 SQL LIKE 找 data
+  // ...
   const keyword = req.query.keyword
   const restaurant = restaurantList.filter((restaurant) => restaurant.name.toLowerCase().includes(keyword.toLowerCase()))
   res.render('index', { restaurant, keyword })

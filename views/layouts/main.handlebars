@@ -20,6 +20,10 @@
             width="30" height="30" class="d-inline-block align-top" alt="好。吃">
           我的餐廳清單
         </a>
+        {{!-- TODO: 如果為新增頁面，則不顯示：用 Helper 試試看--}}
+        <form class="form-inline" action="/restaurants/new">
+          <button type="submit" class="btn btn-outline-info">Create a new one</button>
+        </form>
       </div>
     </nav>
 
