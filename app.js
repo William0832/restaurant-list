@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
   `
 
   Restaurant.find() // 查找資料
-    .lean()         // 整理資料
+    .lean() // 整理資料
     .exec((err, restaurants) => { // 抓回資料
       if (err) return console.log(err)
       res.render('index', { restaurant: restaurants, script })
