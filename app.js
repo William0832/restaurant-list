@@ -47,6 +47,7 @@ require('./config/passport.js')(passport)
 app.use('/', require('./routes/home.js'))
 app.use('/restaurants', require('./routes/restaurant.js'))
 app.use('/users', require('./routes/user.js'))
+app.use('/auth', require('./routes/auths.js'))
 
 // Start server and listen it's port
 app.listen(port, () => {
