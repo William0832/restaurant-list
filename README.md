@@ -40,6 +40,16 @@ cd restaurant-list
 npm install
 ```
 
+## Setting
+因此專案有結合 Facebook API，故需在 Facebook for developers 上設定一個應用程式，並把資訊填入 .env 檔才能正常啟用
+.env 請放在根目錄底下
+```console
+// .env
+FACEBOOK_ID=xxxxxxxx
+FACEBOOK_SECRET=xxxxxxxx
+FACEBOOK_CALLBACK=http://localhost:3000/auth/facebook/callback
+```
+
 ## Executing
 請在 mongodb 底下新增 restaurant 資料庫   
 進到存放 mongodb 指令的 bin 資料夾，啟動 mongodb
