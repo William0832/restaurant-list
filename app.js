@@ -12,8 +12,10 @@ const methodOverride = require('method-override')
 const session = require('express-session')
 const passport = require('passport')
 
+const flash = require('connect-flash')
+
 // DB
-mongoose.connect('mongodb://127.0.0.1/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection
 
 db.on('error', () => {
@@ -42,6 +44,17 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 require('./config/passport.js')(passport)
+app.use(flash())
+
+// Set variable that view can use
+app.use((req, res, next) => {
+  res.locals.user = req.user
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
+  res.locals.error_msg = req.flash('error')
+  next()
+})
 
 // Use Router to deal with routes
 app.use('/', require('./routes/home.js'))
