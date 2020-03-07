@@ -44,7 +44,7 @@ module.exports = (passport) => {
                   .catch((err) => console.log(err))
               })
             })
-          }
+          } else return done(null, user)
         })
         .catch((err) => console.log(err))
     })
