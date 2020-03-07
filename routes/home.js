@@ -58,6 +58,7 @@ router.get('/', authenticated, (req, res) => {
   // 搜尋
   const keyword = req.query.keyword
   const findCondition = (keyword) ? { name: { $regex: '.*' + keyword + '.*', $options: 'i' } } : {} // 去 DB 用 SQL LIKE 找 data ({欄位名稱: {LIKE: %keyword%}})，ignore 大小寫
+  findCondition.userId = req.user._id
 
   // 排序
   const sortType = req.query.sortType

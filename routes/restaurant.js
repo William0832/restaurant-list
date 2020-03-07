@@ -16,7 +16,7 @@ router.post('/', authenticated, (req, res) => {
   }
 
   const restaurant = new Restaurant(req.body)
-  // console.log(restaurant) // initialize 的當下，就會給一個 _id 了欸
+  restaurant.userId = req.user._id
   restaurant.save((err) => {
     if (err) return console.log(err)
     return res.redirect('/')
