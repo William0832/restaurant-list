@@ -4,14 +4,14 @@ const Restaurant = require('../models/restaurant.js')
 
 // 使用者可以新增一家餐廳
 router.get('/new', (req, res) => {
-  res.render('edit', { action: '/restaurants' })
+  res.render('restaurants/edit', { action: '/restaurants' })
 })
 router.post('/', (req, res) => {
   // 檢查: 每個欄位都是必填
   const blankCount = Object.values(req.body).filter((value) => value === '').length
   if (blankCount > 0) {
     const message = `尚有 ${blankCount}個欄位沒有填寫，請檢查！`
-    return res.render('edit', { restaurant: req.body, message })
+    return res.render('restaurants/edit', { restaurant: req.body, message })
   }
 
   const restaurant = new Restaurant(req.body)
@@ -28,7 +28,7 @@ router.get('/:restaurant_id', (req, res) => {
     .lean()
     .exec((err, restaurant) => {
       if (err) return console.log(err)
-      return res.render('detail', { restaurant })
+      return res.render('restaurants/detail', { restaurant })
     })
 })
 
@@ -38,7 +38,7 @@ router.get('/:restaurant_id/edit', (req, res) => {
     .lean()
     .exec((err, restaurant) => {
       if (err) return console.log(err)
-      return res.render('edit', { restaurant, action: `/restaurants/${restaurant._id}/?_method=PUT` })
+      return res.render('restaurants/edit', { restaurant, action: `/restaurants/${restaurant._id}/?_method=PUT` })
     })
 })
 router.put('/:restaurant_id', (req, res) => {
@@ -46,7 +46,7 @@ router.put('/:restaurant_id', (req, res) => {
   const blankCount = Object.values(req.body).filter((value) => value === '').length
   if (blankCount > 0) {
     const message = `尚有 ${blankCount}個欄位沒有填寫，請檢查！`
-    return res.render('edit', { restaurant: req.body, message })
+    return res.render('restaurants/edit', { restaurant: req.body, message })
   }
 
   Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
