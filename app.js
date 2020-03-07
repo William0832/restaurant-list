@@ -28,6 +28,10 @@ db.once('open', () => {
 
 // Set express module
 const app = express()
+// 判別開發環境: 如果不是 production，就透過 dotenv 讀取 .env file
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 // Set express handlebars module
 app.engine('handlebars', exphbs({ defaultLayout: 'main' })) // define engine and its layout
